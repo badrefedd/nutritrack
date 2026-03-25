@@ -2,8 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>NutriTrack Pro</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NutriTrack">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="description" content="Suivi nutrition professionnel — calories, macros, sport">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -143,6 +148,17 @@ select option{background:var(--bg3);}
 .day-nav button{background:none;border:1px solid var(--border);border-radius:var(--rsm);color:var(--text2);cursor:pointer;padding:4px 10px;font-size:13px;}
 .day-nav button:hover{background:var(--bg3);}
 .day-nav .day-label{font-size:13.5px;color:var(--text);font-weight:500;min-width:160px;text-align:center;}
+/* BILAN DATE NAV */
+.bilan-date-nav{display:flex;align-items:center;gap:10px;}
+.bilan-date-nav button{background:none;border:1px solid var(--border);border-radius:var(--rsm);color:var(--text2);cursor:pointer;padding:4px 10px;font-size:13px;}
+.bilan-date-nav button:hover{background:var(--bg3);}
+.bilan-date-nav input[type=date]{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);color:var(--text);padding:5px 10px;font-size:13px;font-family:'DM Sans',sans-serif;width:auto;cursor:pointer;}
+.bilan-date-nav input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.5;}
+/* IMPORT JSON */
+.import-row{display:flex;gap:8px;margin-top:8px;}
+.import-row input{flex:1;}
+/* CUSTOM DB BADGE */
+.badge-mydb{font-size:10px;background:rgba(232,121,249,0.15);color:var(--sport);padding:1px 6px;border-radius:4px;margin-left:5px;}
 /* ALERTS */
 .alert{padding:9px 13px;border-radius:var(--rsm);font-size:13px;margin-bottom:1rem;border:1px solid;}
 .alert-green{background:var(--green-bg);color:var(--green);border-color:rgba(74,222,128,.3);}
@@ -235,6 +251,15 @@ select option{background:var(--bg3);}
       <div id="r-imc" style="font-size:13px;color:var(--text2);padding:9px 12px;background:var(--bg3);border-radius:var(--rsm)"></div>
     </div>
   </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+      <div class="card-label" style="margin-bottom:0;color:var(--sport)">⚡ Ma bibliothèque personnelle</div>
+      <button class="btn btn-sm" onclick="renderCustomDB()" style="font-size:11.5px">Rafraîchir</button>
+    </div>
+    <div style="font-size:12.5px;color:var(--text3);margin-bottom:10px">Les aliments sauvegardés apparaissent dans la recherche du journal.</div>
+    <div id="custom-db-list"><div class="empty" style="padding:.75rem">Aucun aliment enregistré</div></div>
+  </div>
 </div>
 
 <!-- JOURNAL -->
@@ -252,11 +277,10 @@ select option{background:var(--bg3);}
   </div>
 
   <div class="card">
-    <div class="card-label">Rechercher dans la base (400+ produits)</div>
+    <div class="card-label">Rechercher (DB + Ma bibliothèque)</div>
     <div class="search-wrap"><span class="search-icon">⌕</span>
       <input type="text" id="food-input" placeholder="Oeuf, muffin auchan, poulet, yaourt danone, snickers..." oninput="filtrer()">
     </div>
-    <div class="filter-row" id="cat-filters"></div>
     <div class="food-results" id="food-results"></div>
   </div>
 
@@ -276,8 +300,22 @@ select option{background:var(--bg3);}
         <div class="fg"><label style="color:var(--lip)">Lipides (g)</label><input type="number" id="c-lip" placeholder="15" min="0" step=".1"></div>
       </div>
       <div class="fg"><label>Notes <span style="color:var(--text3);font-size:11px">optionnel</span></label><input type="text" id="c-note" placeholder="portion complète, environ 350g..."></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <input type="checkbox" id="c-save-lib" style="width:auto;cursor:pointer;accent-color:var(--sport)">
+        <label for="c-save-lib" style="font-size:13px;color:var(--text2);cursor:pointer;">Enregistrer dans <span style="color:var(--sport)">Ma bibliothèque</span> (réutilisable)</label>
+      </div>
       <button class="btn btn-green btn-sm" onclick="ajouterCustom()" style="margin-top:4px">Ajouter au journal</button>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Import rapide JSON</div>
+    <div style="font-size:12.5px;color:var(--text3);margin-bottom:8px">Colle un objet JSON pour l'ajouter directement au journal : <code style="color:var(--text2);background:var(--bg3);padding:1px 5px;border-radius:4px">{"n":"Nom","k":100,"p":10,"g":5,"l":2}</code></div>
+    <div class="import-row">
+      <input type="text" id="import-json" placeholder='{"n":"Poulet rôti","k":165,"p":31,"g":0,"l":3.6}'>
+      <button class="btn btn-sm" onclick="importJSON()">Importer</button>
+    </div>
+    <div id="import-feedback" style="font-size:12.5px;margin-top:6px;display:none"></div>
   </div>
 
   <div class="card">
@@ -298,7 +336,14 @@ select option{background:var(--bg3);}
 
 <!-- BILAN -->
 <div class="section" id="tab-bilan">
-  <div class="page-header"><div><div class="page-title">Bilan du jour</div><div class="page-sub">Analyse détaillée de tes apports</div></div></div>
+  <div class="page-header">
+    <div><div class="page-title">Bilan du jour</div><div class="page-sub" id="bilan-date-lbl">Analyse détaillée de tes apports</div></div>
+    <div class="bilan-date-nav">
+      <button onclick="bilanChangeDay(-1)">←</button>
+      <input type="date" id="bilan-date-picker" onchange="bilanPickDate(this.value)">
+      <button onclick="bilanChangeDay(1)" id="bilan-next-btn">→</button>
+    </div>
+  </div>
   <div id="bilan-content"><div class="card"><div class="empty">Complète ton profil pour voir le bilan</div></div></div>
 </div>
 
@@ -607,9 +652,32 @@ const CATS = [...new Set(DB.map(a=>a.c))].sort();
 
 const TODAY = new Date();
 let viewDate = new Date(TODAY);
+let bilanDate = new Date(TODAY);
 let profil = JSON.parse(localStorage.getItem('nutri_profil')||'null');
 let activeCat = 'all';
 let customOpen = false;
+
+// ─── CUSTOM DB ────────────────────────────────
+function getCustomDB(){return JSON.parse(localStorage.getItem('CUSTOM_DB')||'[]');}
+function saveCustomDB(data){localStorage.setItem('CUSTOM_DB',JSON.stringify(data));}
+function deleteFromCustomDB(idx){
+  const db=getCustomDB(); db.splice(idx,1); saveCustomDB(db);
+  renderCustomDB(); filtrer();
+}
+function renderCustomDB(){
+  const db=getCustomDB();
+  const el=document.getElementById('custom-db-list');
+  if(!el) return;
+  if(!db.length){el.innerHTML='<div class="empty" style="padding:.75rem">Aucun aliment enregistré</div>';return;}
+  el.innerHTML=db.map((a,i)=>`
+    <div class="food-row" style="margin-bottom:5px">
+      <div class="food-info">
+        <div class="food-name">${a.n}<span class="badge-mydb">Ma bibliothèque</span></div>
+        <div class="food-meta"><span>${a.k} kcal/100g</span><span style="color:var(--prot)">P${a.p}g</span><span style="color:var(--glu)">G${a.g}g</span><span style="color:var(--lip)">L${a.l}g</span></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="deleteFromCustomDB(${i})" title="Supprimer">✕</button>
+    </div>`).join('');
+}
 
 function dateKey(d){ return d.toDateString(); }
 function getJournal(d){ return JSON.parse(localStorage.getItem('nutri_j_'+dateKey(d))||'[]'); }
@@ -632,7 +700,7 @@ function goTo(name){
   document.querySelectorAll('.nav-item').forEach((b,i)=>b.classList.toggle('active',['profil','journal','bilan','semaine','activites'][i]===name));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='bilan') renderBilan();
+  if(name==='bilan'){updateBilanDateUI();renderBilan();}
   if(name==='semaine') renderSemaine();
   if(name==='activites'){syncActNav();renderActivites();}
 }
@@ -661,73 +729,96 @@ function syncActNav(){
   document.getElementById('act-btn-next').style.opacity = isToday(viewDate)?'0.3':'1';
   document.getElementById('act-date-lbl').textContent = viewDate.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
+
+// ─── BILAN DATE NAV ────────────────────────────
+function updateBilanDateUI(){
+  const isT = dateKey(bilanDate)===dateKey(TODAY);
+  const lbl = isT ? 'Aujourd\'hui' : bilanDate.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('bilan-date-lbl').textContent = lbl;
+  const picker = document.getElementById('bilan-date-picker');
+  picker.value = bilanDate.toISOString().split('T')[0];
+  picker.max = TODAY.toISOString().split('T')[0];
+  document.getElementById('bilan-next-btn').disabled = isT;
+  document.getElementById('bilan-next-btn').style.opacity = isT?'0.3':'1';
+}
+function bilanChangeDay(delta){
+  const nd = new Date(bilanDate);
+  nd.setDate(nd.getDate()+delta);
+  if(nd > TODAY) return;
+  bilanDate = nd;
+  updateBilanDateUI();
+  renderBilan();
+}
+function bilanPickDate(val){
+  if(!val) return;
+  const nd = new Date(val+'T12:00:00');
+  if(nd > TODAY) return;
+  bilanDate = nd;
+  updateBilanDateUI();
+  renderBilan();
+}
 function resetDay(){
   if(!confirm('Réinitialiser tous les aliments de cette journée ?')) return;
   saveJournal(viewDate,[]);
   renderJournal(); renderBilan(); updateSidebar();
 }
 
-// ─── SEARCH ───────────────────────────────────
-function initCats(){
-  const el=document.getElementById('cat-filters');
-  el.innerHTML='<button class="filter-btn active" onclick="setCat(\'all\',this)">Tous</button>'
-    +CATS.map(c=>`<button class="filter-btn" onclick="setCat('${c.replace(/'/g,"\\'")}',this)">${c}</button>`).join('');
-}
-function setCat(cat,btn){
-  activeCat=cat;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  filtrer();
-}
+// ─── SEARCH (DB + CUSTOM_DB merged) ───────────
 function filtrer(){
   const q=document.getElementById('food-input').value.toLowerCase().trim();
-  let res=activeCat==='all'?[...DB]:DB.filter(a=>a.c===activeCat);
-  if(q) res=res.filter(a=>a.n.toLowerCase().includes(q)||(a.b&&a.b.toLowerCase().includes(q))||a.c.toLowerCase().includes(q));
+  const customDB=getCustomDB().map(a=>({...a,_custom:true}));
+  const allDB=[...DB,...customDB];
+  let res=q?allDB.filter(a=>a.n.toLowerCase().includes(q)||(a.b&&a.b.toLowerCase().includes(q))||(a.c&&a.c.toLowerCase().includes(q))):allDB;
   renderFoods(res);
 }
 function renderFoods(list){
   const el=document.getElementById('food-results');
-  if(!list.length){el.innerHTML='<div class="empty">Aucun résultat</div>';return;}
-  el.innerHTML=list.slice(0,12).map((a,i)=>{
+  if(!list.length){el.innerHTML='<div class="empty">Aucun résultat — essaie l\'ajout personnalisé</div>';return;}
+  const customDB=getCustomDB();
+  el.innerHTML=list.slice(0,14).map((a,i)=>{
     const hasU=a.u&&a.uw;
     const uL=hasU?UL[a.u]||a.u:'g';
     const hint=hasU?`· 1 ${uL} ≈ ${Math.round(a.k*a.uw/100)} kcal`:'';
-    const macroHint=`P:${a.p}g G:${a.g}g L:${a.l}g`;
+    const isCustom=!!a._custom;
+    const dbIdx=isCustom?DB.length+customDB.findIndex(x=>x.n===a.n&&x.k===a.k):DB.indexOf(a);
     return `<div class="food-row">
       <div class="food-info">
-        <div class="food-name">${a.n}${a.b?`<span class="brand-tag">${a.b}</span>`:''}</div>
+        <div class="food-name">${a.n}${a.b?`<span class="brand-tag">${a.b}</span>`:''}${isCustom?'<span class="badge-mydb">Ma biblio</span>':''}</div>
         <div class="food-meta">
           <span>${a.k} kcal/100g</span>
-          <span style="color:var(--prot)">P${a.p}g</span>
-          <span style="color:var(--glu)">G${a.g}g</span>
-          <span style="color:var(--lip)">L${a.l}g</span>
+          <span style="color:var(--prot)">P${a.p||0}g</span>
+          <span style="color:var(--glu)">G${a.g||0}g</span>
+          <span style="color:var(--lip)">L${a.l||0}g</span>
           <span>${hint}</span>
         </div>
       </div>
       <div class="food-controls">
         <input type="number" id="qi${i}" value="${hasU?1:100}" min="0.1" max="9999" step="${hasU?'1':'5'}">
         <span class="unit-label">${uL}</span>
-        <button class="btn btn-green btn-sm" onclick="ajouter(${DB.indexOf(a)},${i})">+</button>
+        <button class="btn btn-green btn-sm" onclick="ajouterFromSearch(${JSON.stringify(a).replace(/"/g,'&quot;')},${i})">+</button>
       </div>
     </div>`;
   }).join('');
 }
 
 // ─── AJOUTER ──────────────────────────────────
-function ajouter(idx,di){
-  const a=DB[idx];
+function ajouterFromSearch(a, di){
   const raw=parseFloat(document.getElementById('qi'+di).value)||1;
   const grams=a.u&&a.uw?raw*a.uw:raw;
   const ratio=grams/100;
   const kcal=Math.round(a.k*ratio);
-  const prot=Math.round(a.p*ratio*10)/10;
-  const gluc=Math.round(a.g*ratio*10)/10;
-  const lipi=Math.round(a.l*ratio*10)/10;
+  const prot=Math.round((a.p||0)*ratio*10)/10;
+  const gluc=Math.round((a.g||0)*ratio*10)/10;
+  const lipi=Math.round((a.l||0)*ratio*10)/10;
   const qL=a.u&&a.uw?`${raw} ${UL[a.u]||a.u} (${Math.round(grams)}g)`:`${Math.round(grams)}g`;
   const journal=getJournal(viewDate);
   journal.push({n:a.n,qty:qL,kcal,p:prot,g:gluc,l:lipi,h:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),custom:false});
   saveJournal(viewDate,journal);
   renderJournal(); renderBilan(); updateSidebar();
+}
+// Keep old ajouter for legacy (not used in new renderFoods)
+function ajouter(idx,di){
+  ajouterFromSearch(DB[idx],di);
 }
 function ajouterCustom(){
   const nom=document.getElementById('c-nom').value.trim();
@@ -736,12 +827,22 @@ function ajouterCustom(){
   const gluc=parseFloat(document.getElementById('c-glu').value)||0;
   const lipi=parseFloat(document.getElementById('c-lip').value)||0;
   const note=document.getElementById('c-note').value.trim();
+  const saveLib=document.getElementById('c-save-lib').checked;
   if(!nom||!kcal){alert('Remplis au minimum le nom et les calories.');return;}
+  // Save to custom library if checked
+  if(saveLib){
+    const cdb=getCustomDB();
+    if(!cdb.find(x=>x.n===nom)){
+      cdb.push({n:nom,k:kcal,p:prot,g:gluc,l:lipi,c:'Ma bibliothèque'});
+      saveCustomDB(cdb);
+    }
+  }
   const journal=getJournal(viewDate);
   journal.push({n:nom,qty:note||'portion perso',kcal,p:prot,g:gluc,l:lipi,h:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),custom:true});
   saveJournal(viewDate,journal);
   ['c-nom','c-kcal','c-prot','c-glu','c-lip','c-note'].forEach(id=>document.getElementById(id).value='');
-  renderJournal(); renderBilan(); updateSidebar();
+  document.getElementById('c-save-lib').checked=false;
+  renderJournal(); renderBilan(); updateSidebar(); filtrer();
 }
 function supprimer(i){
   const journal=getJournal(viewDate);
@@ -752,6 +853,28 @@ function supprimer(i){
 function toggleCustom(){
   customOpen=!customOpen;
   document.getElementById('custom-panel').classList.toggle('hidden',!customOpen);
+}
+function importJSON(){
+  const raw=document.getElementById('import-json').value.trim();
+  const fb=document.getElementById('import-feedback');
+  fb.style.display='block';
+  try{
+    const a=JSON.parse(raw);
+    if(!a.n||a.k===undefined){fb.style.color='var(--red)';fb.textContent='Champ manquant : n (nom) et k (kcal) sont requis.';return;}
+    const kcal=Math.round(Number(a.k)||0);
+    const prot=Math.round((Number(a.p)||0)*10)/10;
+    const gluc=Math.round((Number(a.g)||0)*10)/10;
+    const lipi=Math.round((Number(a.l)||0)*10)/10;
+    const journal=getJournal(viewDate);
+    journal.push({n:String(a.n),qty:'import JSON',kcal,p:prot,g:gluc,l:lipi,h:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),custom:true});
+    saveJournal(viewDate,journal);
+    document.getElementById('import-json').value='';
+    fb.style.color='var(--green)';fb.textContent=`✓ "${a.n}" ajouté (${kcal} kcal)`;
+    setTimeout(()=>{fb.style.display='none';},3000);
+    renderJournal(); renderBilan(); updateSidebar();
+  }catch(e){
+    fb.style.color='var(--red)';fb.textContent='JSON invalide — vérifie la syntaxe.';
+  }
 }
 
 // ─── TOTAUX ───────────────────────────────────
@@ -823,9 +946,13 @@ function renderJournal(){
 function renderBilan(){
   const el=document.getElementById('bilan-content');
   if(!profil){el.innerHTML='<div class="card"><div class="empty">Complète ton profil pour voir le bilan</div></div>';return;}
-  const journal=getJournal(viewDate);
+  const journal=getJournal(bilanDate);
+  const acts=getActivites(bilanDate);
+  // Empty state for past days with no data
+  if(!journal.length && !acts.length && dateKey(bilanDate)!==dateKey(TODAY)){
+    el.innerHTML='<div class="card"><div class="empty" style="padding:2.5rem">Pas de saisie pour ce jour</div></div>';return;
+  }
   const tot=getTotals(journal);
-  const acts=getActivites(viewDate);
   const burned=getTotalBurned(acts);
   const cible=getCible();
   const targets=getMacroTargets();
@@ -1120,7 +1247,7 @@ function calculer(){
 
 // ─── INIT ─────────────────────────────────────
 updateDayNav();
-initCats();
+updateBilanDateUI();
 if(profil){
   ['age','poids','taille'].forEach(id=>document.getElementById(id).value=profil[id]);
   document.getElementById('sexe').value=profil.sexe;
@@ -1136,6 +1263,8 @@ if(profil){
   document.getElementById('r-imc').textContent=`IMC : ${imc.toFixed(1)} — ${imc<18.5?'Insuffisance pondérale':imc<25?'Poids normal':imc<30?'Surpoids':'Obésité'}`;
   document.getElementById('result-block').style.display='block';
 }
+initSportRef();
+renderCustomDB();
 filtrer(); renderJournal(); updateSidebar();
 </script>
 </body>
