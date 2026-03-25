@@ -192,7 +192,7 @@ select option{background:var(--bg3);}
   </div>
 </aside>
 <main class="main">
-
+ 
 <!-- PROFIL -->
 <div class="section active" id="tab-profil">
   <div class="page-header"><div><div class="page-title">Mon profil</div><div class="page-sub">Calcul de tes besoins caloriques et en macronutriments</div></div></div>
@@ -251,7 +251,7 @@ select option{background:var(--bg3);}
       <div id="r-imc" style="font-size:13px;color:var(--text2);padding:9px 12px;background:var(--bg3);border-radius:var(--rsm)"></div>
     </div>
   </div>
-
+ 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
       <div class="card-label" style="margin-bottom:0;color:var(--sport)">⚡ Ma bibliothèque personnelle</div>
@@ -261,7 +261,7 @@ select option{background:var(--bg3);}
     <div id="custom-db-list"><div class="empty" style="padding:.75rem">Aucun aliment enregistré</div></div>
   </div>
 </div>
-
+ 
 <!-- JOURNAL -->
 <div class="section" id="tab-journal">
   <div class="page-header">
@@ -275,7 +275,7 @@ select option{background:var(--bg3);}
       <button class="btn btn-red btn-sm" onclick="resetDay()">Réinitialiser</button>
     </div>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Rechercher (DB + Ma bibliothèque)</div>
     <div class="search-wrap"><span class="search-icon">⌕</span>
@@ -283,7 +283,7 @@ select option{background:var(--bg3);}
     </div>
     <div class="food-results" id="food-results"></div>
   </div>
-
+ 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
       <div class="card-label" style="margin-bottom:0">Ajout personnalisé</div>
@@ -307,7 +307,7 @@ select option{background:var(--bg3);}
       <button class="btn btn-green btn-sm" onclick="ajouterCustom()" style="margin-top:4px">Ajouter au journal</button>
     </div>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Import rapide JSON</div>
     <div style="font-size:12.5px;color:var(--text3);margin-bottom:8px">Colle un objet JSON pour l'ajouter directement au journal : <code style="color:var(--text2);background:var(--bg3);padding:1px 5px;border-radius:4px">{"n":"Nom","k":100,"p":10,"g":5,"l":2}</code></div>
@@ -317,7 +317,7 @@ select option{background:var(--bg3);}
     </div>
     <div id="import-feedback" style="font-size:12.5px;margin-top:6px;display:none"></div>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Repas enregistrés</div>
     <div id="journal-list"><div class="empty">Aucun aliment enregistré</div></div>
@@ -333,7 +333,7 @@ select option{background:var(--bg3);}
     <div id="journal-macro-bars" style="display:none" class="macro-section"></div>
   </div>
 </div>
-
+ 
 <!-- BILAN -->
 <div class="section" id="tab-bilan">
   <div class="page-header">
@@ -346,7 +346,7 @@ select option{background:var(--bg3);}
   </div>
   <div id="bilan-content"><div class="card"><div class="empty">Complète ton profil pour voir le bilan</div></div></div>
 </div>
-
+ 
 <!-- SEMAINE -->
 <div class="section" id="tab-semaine">
   <div class="page-header"><div><div class="page-title">Bilan hebdomadaire</div><div class="page-sub">7 derniers jours — tendances et moyennes</div></div></div>
@@ -362,12 +362,12 @@ select option{background:var(--bg3);}
       <button onclick="changeDay(1);goTo('activites')" id="act-btn-next">→</button>
     </div>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Activités communes — ajout rapide</div>
     <div class="sport-ref-grid" id="sport-ref-grid"></div>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Saisie manuelle</div>
     <div class="g2">
@@ -377,7 +377,7 @@ select option{background:var(--bg3);}
     <div class="fg"><label>Durée <span style="color:var(--text3);font-size:11px">optionnel</span></label><input type="text" id="a-duree" placeholder="Ex: 45 min, 1h30..."></div>
     <button class="btn btn-sport" onclick="ajouterActivite()" style="width:100%;margin-top:4px">⚡ Enregistrer l'activité</button>
   </div>
-
+ 
   <div class="card">
     <div class="card-label">Activités de la journée</div>
     <div id="activites-list"><div class="empty">Aucune activité enregistrée</div></div>
@@ -388,17 +388,17 @@ select option{background:var(--bg3);}
       </div>
     </div>
   </div>
-
+ 
   <div class="card" id="act-balance-card" style="display:none">
     <div class="card-label">Balance énergétique du jour</div>
     <div class="g3" id="act-balance-metrics"></div>
     <div id="act-balance-msg"></div>
   </div>
 </div>
-
+ 
 </main>
 </div>
-
+ 
 <script>
 // ═══════════════════════════════════════════════════════
 // BASE DE DONNÉES — format: {n, k, p, g, l, c, b?, u?, uw?}
@@ -637,7 +637,7 @@ const DB = [
 {n:'Chips natures Auchan',k:530,p:6.5,g:51,l:34,c:'Auchan',b:'Auchan'},
 {n:'Galettes riz Auchan Bio',k:377,p:7,g:81,l:2,c:'Auchan Bio',b:'Auchan Bio',u:'piece',uw:10},
 ];
-
+ 
 // ═══════════════════════════════════════════════
 // OBJECTIFS MACROS PAR OBJECTIF
 const MACRO_RATIOS = {
@@ -649,14 +649,14 @@ const MACRO_RATIOS = {
 };
 const UL = {piece:'piece(s)',tranche:'tranche(s)',portion:'portion(s)',verre:'verre(s)'};
 const CATS = [...new Set(DB.map(a=>a.c))].sort();
-
+ 
 const TODAY = new Date();
 let viewDate = new Date(TODAY);
 let bilanDate = new Date(TODAY);
 let profil = JSON.parse(localStorage.getItem('nutri_profil')||'null');
 let activeCat = 'all';
 let customOpen = false;
-
+ 
 // ─── CUSTOM DB ────────────────────────────────
 function getCustomDB(){return JSON.parse(localStorage.getItem('CUSTOM_DB')||'[]');}
 function saveCustomDB(data){localStorage.setItem('CUSTOM_DB',JSON.stringify(data));}
@@ -678,12 +678,12 @@ function renderCustomDB(){
       <button class="btn btn-ghost btn-sm" onclick="deleteFromCustomDB(${i})" title="Supprimer">✕</button>
     </div>`).join('');
 }
-
+ 
 function dateKey(d){ return d.toDateString(); }
 function getJournal(d){ return JSON.parse(localStorage.getItem('nutri_j_'+dateKey(d))||'[]'); }
 function saveJournal(d,data){ localStorage.setItem('nutri_j_'+dateKey(d),JSON.stringify(data)); }
 function isToday(d){ return dateKey(d)===dateKey(TODAY); }
-
+ 
 function getCible(){ return profil ? profil.cible : 0; }
 function getMacroTargets(){
   if(!profil) return {p:0,g:0,l:0};
@@ -694,7 +694,7 @@ function getMacroTargets(){
     l: Math.round(profil.cible * r.l / 9),
   };
 }
-
+ 
 // ─── NAVIGATION ───────────────────────────────
 function goTo(name){
   document.querySelectorAll('.nav-item').forEach((b,i)=>b.classList.toggle('active',['profil','journal','bilan','semaine','activites'][i]===name));
@@ -704,7 +704,7 @@ function goTo(name){
   if(name==='semaine') renderSemaine();
   if(name==='activites'){syncActNav();renderActivites();}
 }
-
+ 
 // ─── DAY NAVIGATION ───────────────────────────
 function changeDay(delta){
   const nd = new Date(viewDate);
@@ -729,7 +729,7 @@ function syncActNav(){
   document.getElementById('act-btn-next').style.opacity = isToday(viewDate)?'0.3':'1';
   document.getElementById('act-date-lbl').textContent = viewDate.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
-
+ 
 // ─── BILAN DATE NAV ────────────────────────────
 function updateBilanDateUI(){
   const isT = dateKey(bilanDate)===dateKey(TODAY);
@@ -762,7 +762,7 @@ function resetDay(){
   saveJournal(viewDate,[]);
   renderJournal(); renderBilan(); updateSidebar();
 }
-
+ 
 // ─── SEARCH (DB + CUSTOM_DB merged) ───────────
 function filtrer(){
   const q=document.getElementById('food-input').value.toLowerCase().trim();
@@ -800,7 +800,7 @@ function renderFoods(list){
     </div>`;
   }).join('');
 }
-
+ 
 // ─── AJOUTER ──────────────────────────────────
 function ajouterFromSearch(a, di){
   const raw=parseFloat(document.getElementById('qi'+di).value)||1;
@@ -876,13 +876,13 @@ function importJSON(){
     fb.style.color='var(--red)';fb.textContent='JSON invalide — vérifie la syntaxe.';
   }
 }
-
+ 
 // ─── TOTAUX ───────────────────────────────────
 function getTotals(journal){
   return journal.reduce((s,x)=>({kcal:s.kcal+x.kcal,p:s.p+x.p,g:s.g+x.g,l:s.l+x.l}),{kcal:0,p:0,g:0,l:0});
 }
 function bc(pct){return pct>1?'over':pct>.85?'warn':'ok';}
-
+ 
 // ─── RENDER MACRO BARS ─────────────────────────
 function macroBarHTML(totals, targets, showTitle=true){
   const pPct=Math.min(targets.p>0?totals.p/targets.p:0,1)*100;
@@ -902,7 +902,7 @@ function macroBarHTML(totals, targets, showTitle=true){
       <div class="prog-track"><div class="prog-fill lip-fill" style="width:${lPct.toFixed(1)}%"></div></div>
     </div>`;
 }
-
+ 
 // ─── RENDER JOURNAL ───────────────────────────
 function renderJournal(){
   const journal=getJournal(viewDate);
@@ -941,7 +941,7 @@ function renderJournal(){
   barEl.style.display='block';
   barEl.innerHTML=macroBarHTML(tot,targets);
 }
-
+ 
 // ─── RENDER BILAN ─────────────────────────────
 function renderBilan(){
   const el=document.getElementById('bilan-content');
@@ -1016,7 +1016,7 @@ function renderBilan(){
       </div>`).join('')+`<div class="bilan-row"><span>Total</span><span style="color:${col};font-family:'DM Mono',monospace">${tot.kcal} kcal</span></div>`}
   </div>`;
 }
-
+ 
 // ─── RENDER SEMAINE ───────────────────────────
 function renderSemaine(){
   const el=document.getElementById('semaine-content');
@@ -1096,7 +1096,7 @@ function renderSemaine(){
     }).join('')}
   </div>`;
 }
-
+ 
 // ─── ACTIVITÉS SPORT ──────────────────────────
 const SPORT_REF = [
   {n:'Marche rapide',d:'1h',k:260},{n:'Course à pied',d:'30 min',k:300},
@@ -1111,7 +1111,7 @@ const SPORT_REF = [
 function getActivites(d){return JSON.parse(localStorage.getItem('nutri_a_'+dateKey(d))||'[]');}
 function saveActivites(d,data){localStorage.setItem('nutri_a_'+dateKey(d),JSON.stringify(data));}
 function getTotalBurned(acts){return acts.reduce((s,a)=>s+a.kcal,0);}
-
+ 
 function initSportRef(){
   const el=document.getElementById('sport-ref-grid');
   el.innerHTML=SPORT_REF.map((a,i)=>`
@@ -1189,7 +1189,7 @@ function renderActivites(){
       </div>`;
   }
 }
-
+ 
 // ─── SIDEBAR ──────────────────────────────────
 function updateSidebar(){
   const journal=getJournal(viewDate);
@@ -1210,7 +1210,7 @@ function updateSidebar(){
   document.getElementById('sb-macros').innerHTML=
     `<span class="macro-pill p">P${Math.round(tot.p)}g</span><span class="macro-pill g">G${Math.round(tot.g)}g</span><span class="macro-pill l">L${Math.round(tot.l)}g</span>`;
 }
-
+ 
 // ─── CALCULER PROFIL ──────────────────────────
 function calculer(){
   const age=parseFloat(document.getElementById('age').value);
@@ -1244,7 +1244,7 @@ function calculer(){
   document.getElementById('result-block').style.display='block';
   updateSidebar(); renderBilan();
 }
-
+ 
 // ─── INIT ─────────────────────────────────────
 updateDayNav();
 updateBilanDateUI();
